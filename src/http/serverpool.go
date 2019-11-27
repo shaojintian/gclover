@@ -3,6 +3,7 @@ package http
 import (
 	"github.com/shaojintian/load_balancer/src/core"
 	"log"
+	"net/url"
 	"sync/atomic"
 )
 
@@ -38,5 +39,11 @@ func (sp *ServerPool) GetNextPeer() *core.Backend {
 	// all dead peers
 	log.Println("all dead peers")
 	return nil
+
+}
+
+func (sp *ServerPool) MarkPeerStatus(u *url.URL,status bool){
+
+
 
 }
