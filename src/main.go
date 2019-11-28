@@ -47,10 +47,11 @@ func startServer(sp myhttp.ServerPool){
 		Handler: http.HandlerFunc(sp.LoadBalance),
 	}
 
+	log.Println("start server.ListenAndServe--------------------------------")
 	if err := server.ListenAndServe();err != nil {
 		log.Fatal(err.Error())
 	}
-	log.Println("success server.ListenAndServe--------------------------------")
+
 
 }
 
