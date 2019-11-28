@@ -10,7 +10,7 @@ import (
 //heart beat to refresh backend
 
 func (sp *ServerPool)HeartBeatCheck(){
-	// 2 mins to refresh all backend status
+	// 20s to refresh all backend status
 	var count int
 	count = 0
 	for{
