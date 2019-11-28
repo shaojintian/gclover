@@ -13,7 +13,9 @@ import (
 
 )
 
-//先快速开发，再处理err  最后在补充处理error
+//go run main.go --backends=http://localhost:3031,http://localhost:3032,http://localhost:3033,http://localhost:3034
+//测试： kbang http://localhost:3030
+
 func main() {
 	log.Println("start init--------------------------------")
 	var serverPoll myhttp.ServerPool
