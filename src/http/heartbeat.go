@@ -11,25 +11,30 @@ import (
 
 func (sp *ServerPool)HeartBeatCheck(){
 	// 2 mins to refresh all backend status
+	var count int
+	count = 0
 	for{
+
 		select{
 		case <-time.After(time.Minute*2) :
+			log.Printf("[HeartBeatCheck]:----- %d round----- ",count)
 			for _,peer := range sp.backends{
-				alive := backendHeartBeatAlive(peer)
+				alive := backendHeartBeatAlive(peer,count)
 				peer.SetAlive(alive)
 			}
 
 		}
+		count++
 	}
 
 }
 
-func backendHeartBeatAlive(peer *core.Backend) bool {
+func backendHeartBeatAlive(peer *core.Backend,count int) bool {
 	timeout := 2 * time.Second
 	//url.Host == ip:port
 	conn, err := net.DialTimeout("tcp",peer.URL.Host,timeout)
 	if err != nil {
-		log.Printf("%s cannot reach\n",peer.URL.Host)
+		log.Printf("[HeartBeatCheck]:----- %d round----- %s dead\n",count,peer.URL.Host)
 		return false
 	}
 	// has connection

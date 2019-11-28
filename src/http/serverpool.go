@@ -38,7 +38,7 @@ func (sp *ServerPool) GetNextPeer() *core.Backend {
 	}
 
 	// all dead peers
-	log.Println("all dead peers")
+	log.Println("LoadBalance() :all dead peers")
 	return nil
 
 }
