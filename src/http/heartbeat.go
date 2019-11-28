@@ -16,7 +16,7 @@ func (sp *ServerPool)HeartBeatCheck(){
 	for{
 
 		select{
-		case <-time.After(time.Minute*2) :
+		case <-time.After(time.Minute) :
 			log.Printf("[HeartBeatCheck]:----- %d round----- ",count)
 			for _,peer := range sp.backends{
 				alive := backendHeartBeatAlive(peer,count)
