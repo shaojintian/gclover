@@ -9,7 +9,7 @@ import (
 
 //handle  one http attempt
 func (sp *ServerPool) LoadBalance(rw http.ResponseWriter,req *http.Request){
-	if GetAttemptsFromCtx(req) > len(sp.backends){
+	if GetAttemptsFromCtx(req) > 3{
 		log.Printf("Max attemps attached: %s",req.URL)
 		http.Error(rw,"this req to much attemps",http.StatusServiceUnavailable)
 		return

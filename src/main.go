@@ -19,12 +19,12 @@ import (
 func main() {
 	log.Println("start init--------------------------------")
 	var serverPoll myhttp.ServerPool
-	startServer(serverPoll)
+	StartServer(serverPoll)
 }
 
 
 
-func startServer(sp myhttp.ServerPool){
+func StartServer(sp myhttp.ServerPool){
 	var serverList string
 	//terminal read
 	flag.StringVar(&serverList, "backends","","eg:http://localhost:3000,http://localhost:3001,...")
@@ -40,13 +40,14 @@ func startServer(sp myhttp.ServerPool){
 	}
 
 
+
 	//concurrency:heart beat check in other goroutine
 	go sp.HeartBeatCheck()
 
 
 	// init reverseProxy http handler
 	server := http.Server{
-		Addr: fmt.Sprintf(":%d", 3030),
+		Addr: fmt.Sprintf("127.0.0.1:%d", 3030),
 		Handler: http.HandlerFunc(sp.LoadBalance),
 	}
 
