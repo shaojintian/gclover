@@ -34,7 +34,7 @@ func startServer(sp myhttp.ServerPool){
 	urls := strings.Split(serverList, ",")
 	for _, u := range urls{
 		u,_ := url.Parse(u)
-		sp.DoLoadBalance(u)
+		sp.InitServerPool(u)
 	}
 
 	//concurrency:heart beat check in other goroutine
