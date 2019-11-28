@@ -3,6 +3,7 @@ package http
 import (
 	"github.com/shaojintian/load_balancer/src/core"
 	"log"
+	"net/http/httputil"
 	"net/url"
 	"sync/atomic"
 )
@@ -43,7 +44,22 @@ func (sp *ServerPool) GetNextPeer() *core.Backend {
 }
 
 func (sp *ServerPool) MarkPeerStatus(u *url.URL,status bool){
+	//不同的peer可能代理了相同的URL
+	for _,p:=range(sp.backends){
+		if u.String() == p.URL.String(){
+			p.SetAlive(status)
+		}
+	}
 
 
+}
 
+func (sp *ServerPool) AddBackend(URL *url.URL,Alive bool,rp *httputil.ReverseProxy){
+	peer := &core.Backend{
+		URL:URL,
+		Alive:Alive,
+		ReverseProxy:rp,
+
+	}
+	sp.backends =append(sp.backends,peer)
 }

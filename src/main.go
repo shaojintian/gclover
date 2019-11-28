@@ -1,35 +1,56 @@
 package main
 
 import (
-	"context"
+
+	"flag"
 	"fmt"
 	myhttp "github.com/shaojintian/load_balancer/src/http"
 	"log"
 	"net/http"
-	"net/http/httputil"
+
 	"net/url"
-	"time"
+	"strings"
+
 )
 
 //先快速开发，再处理err  最后在补充处理error
 func main() {
 	log.Println("start init--------------------------------")
-	init()
+	var serverPoll myhttp.ServerPool
+	startServer(serverPoll)
 }
 
-func init(){
-	var port int
-	//init ReverseProxy
-	targetUrl,_ := url.Parse("http://localhost:8080")
 
 
+func startServer(sp myhttp.ServerPool){
+	var serverList string
+	//terminal read
+	flag.StringVar(&serverList, "backends","","eg:http://localhost:3000,http://localhost:3001,...")
+	flag.Parse()
+	if len(serverList) == 0{
+		log.Fatalln("invalid server list")
+	}
+	//do loadbalance
+	urls := strings.Split(serverList, ",")
+	for _, u := range urls{
+		u,_ := url.Parse(u)
+		sp.DoLoadBalance(u)
+	}
+
+	//concurrency:heart beat check in other goroutine
+	go sp.HeartBeatCheck()
 
 
 	// init reverseProxy http handler
 	server := http.Server{
-		Addr: fmt.Sprintf(":%d", port),
-		Handler: http.HandlerFunc(reverseProxy.ServeHTTP),
+		Addr: fmt.Sprintf(":%d", 3030),
+		Handler: http.HandlerFunc(sp.LoadBalance),
 	}
+
+	if err := server.ListenAndServe();err != nil {
+		log.Fatal(err.Error())
+	}
+	log.Println("success server.ListenAndServe--------------------------------")
 
 }
 
