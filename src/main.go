@@ -13,7 +13,8 @@ import (
 
 //先快速开发，再处理err  最后在补充处理error
 func main() {
-	fmt.Println("hello")
+	log.Println("start init--------------------------------")
+	init()
 }
 
 func init(){
